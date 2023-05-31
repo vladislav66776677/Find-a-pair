@@ -6,10 +6,13 @@ namespace WinFormsApp2
 {
     public partial class Game : Form
     {
-        int[] data = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };  // Массив для того щоб змішувати його
-        int[,] two_arr = new int[8, 8]; // Головний массив, щоб зберігати данні 
-        bool activity_form = true;  // Проміжні логічні змінні
-        int para = 0;   // Змінна дял збереження знайдених кількості пар
+        string temporary_text;
+        string currentDirectory = Directory.GetCurrentDirectory();
+        string[] arr_location_image = new string[] { "Resources\\1.jpg", "Resources\\2.jpg", "Resources\\3.jpg", "Resources\\4.jpg", "Resources\\5.jpg", "Resources\\6.jpg", "Resources\\7.jpg", "Resources\\8.jpg" };
+        int[] data = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };  // РњР°СЃСЃРёРІ РґР»СЏ С‚РѕРіРѕ С‰РѕР± Р·РјС–С€СѓРІР°С‚Рё Р№РѕРіРѕ
+        int[,] two_arr = new int[8, 8]; // Р“РѕР»РѕРІРЅРёР№ РјР°СЃСЃРёРІ, С‰РѕР± Р·Р±РµСЂС–РіР°С‚Рё РґР°РЅРЅС– 
+        bool activity_form = true;  // РџСЂРѕРјС–Р¶РЅС– Р»РѕРіС–С‡РЅС– Р·РјС–РЅРЅС–
+        int para = 0;   // Р—РјС–РЅРЅР° РґСЏР» Р·Р±РµСЂРµР¶РµРЅРЅСЏ Р·РЅР°Р№РґРµРЅРёС… РєС–Р»СЊРєРѕСЃС‚С– РїР°СЂ
         Button btn1 = null;
         Button btn2 = null;
 
@@ -18,15 +21,22 @@ namespace WinFormsApp2
 
         public Game(Start start_form)
         {
-            this.FormBorderStyle = FormBorderStyle.FixedSingle; // Фіксуємо розміри форми, щоб не можна було змінювати розміри форми під час працювання форми
+            this.FormBorderStyle = FormBorderStyle.FixedSingle; // Р¤С–РєСЃСѓС”РјРѕ СЂРѕР·РјС–СЂРё С„РѕСЂРјРё, С‰РѕР± РЅРµ РјРѕР¶РЅР° Р±СѓР»Рѕ Р·РјС–РЅСЋРІР°С‚Рё СЂРѕР·РјС–СЂРё С„РѕСЂРјРё РїС–Рґ С‡Р°СЃ РїСЂР°С†СЋРІР°РЅРЅСЏ С„РѕСЂРјРё
             InitializeComponent();
             this.start_form = start_form;
         }
 
-        public void Start() // Стартова функція форми. Змішує елементи массиву в цій функції
+        public void Start() // РЎС‚Р°СЂС‚РѕРІР° С„СѓРЅРєС†С–СЏ С„РѕСЂРјРё. Р—РјС–С€СѓС” РµР»РµРјРµРЅС‚Рё РјР°СЃСЃРёРІСѓ РІ С†С–Р№ С„СѓРЅРєС†С–С—
         {
+            currentDirectory = currentDirectory.Substring(0, currentDirectory.Length - 24);
+            for (int i = 0; i < arr_location_image.Length; i++)
+            {
+                temporary_text = currentDirectory;
+                temporary_text += arr_location_image[i];
+                arr_location_image[i] = temporary_text;
+            }
             Random random = new Random();
-            for (int u = 0; u < 8; u++) // В циклі змішує елементи массиву місцями, щоб був рандом в парах
+            for (int u = 0; u < 8; u++) // Р’ С†РёРєР»С– Р·РјС–С€СѓС” РµР»РµРјРµРЅС‚Рё РјР°СЃСЃРёРІСѓ РјС–СЃС†СЏРјРё, С‰РѕР± Р±СѓРІ СЂР°РЅРґРѕРј РІ РїР°СЂР°С…
             {
                 for (int i = data.Length - 1; i >= 1; i--)
                 {
@@ -44,51 +54,62 @@ namespace WinFormsApp2
 
         private void Click(int number, object sender)
         {
-            if ((Button)sender != btn1) // Перевірка на повторне натискання однієї і теж самої кнопки
+            Button clickedButton = (Button)sender;
+            if (btn1 == null)   // РЇРєС‰Рѕ РїРµСЂС€Р° РєРЅРѕРїРєР° РїСѓСЃС‚Р°, С‚Рѕ РїРѕРєР°Р·СѓС”РјРѕ С‚РµРєСЃС‚ С– РєСЂР°СЃРёРјРѕ 
             {
-                Button clickedButton = (Button)sender;
-                if (btn1 == null)   // Якщо перша кнопка пуста, то показуємо текст і красимо 
-                {
-                    btn1 = clickedButton;
-                    btn1.Text = number.ToString();
-                    btn1.BackColor = Color.AliceBlue;
-                    return; // Виходимо із функції
-                }
-                btn2 = clickedButton;   // Якщо перша кнопка має вже данні, то працюємо із другою кнопкою
-                btn2.Text = number.ToString();
+                btn1 = clickedButton;
+                btn1.Image = Image.FromFile(arr_location_image[number - 1]);
+                btn1.Tag = number.ToString();
+                btn1.BackColor = Color.AliceBlue;
+
+                return; // Р’РёС…РѕРґРёРјРѕ С–Р· С„СѓРЅРєС†С–С—
+            }
+
+            if (btn2 == null)
+            {
+                btn2 = clickedButton;   // РЇРєС‰Рѕ РїРµСЂС€Р° РєРЅРѕРїРєР° РјР°С” РІР¶Рµ РґР°РЅРЅС–, С‚Рѕ РїСЂР°С†СЋС”РјРѕ С–Р· РґСЂСѓРіРѕСЋ РєРЅРѕРїРєРѕСЋ
+                btn2.Image = Image.FromFile(arr_location_image[number - 1]);
+                btn2.Tag = number.ToString();
                 btn2.BackColor = Color.AliceBlue;
-                if (btn1.Text == btn2.Text) // Перевіряємо на рівність кнопки, якщо текст однаковий, то ми рахуємо пару
+            }
+            else
+            {
+                return;
+            }
+
+            if (btn1.Tag == btn2.Tag) // РџРµСЂРµРІС–СЂСЏС”РјРѕ РЅР° СЂС–РІРЅС–СЃС‚СЊ РєРЅРѕРїРєРё, СЏРєС‰Рѕ С‚РµРєСЃС‚ РѕРґРЅР°РєРѕРІРёР№, С‚Рѕ РјРё СЂР°С…СѓС”РјРѕ РїР°СЂСѓ
+            {
+                btn1.Enabled = false;
+                btn2.Enabled = false;
+                btn1 = null;
+                btn2 = null;
+                para++;
+                if (para == 32) // РЇРєС‰Рѕ Р·РЅР°Р№РґРµРјРѕ РІСЃС– РїР°СЂРё, С‚Рѕ Р·Р°РІРµСЂС€СѓС”РјРѕ РіСЂСѓ
                 {
-                    btn1.Enabled = false;
-                    btn2.Enabled = false;
-                    btn1 = null;
-                    btn2 = null;
-                    para++; 
-                    if (para == 32) // Якщо знайдемо всі пари, то завершуємо гру
-                    {
-                        activity_form = false;
-                        End end_form = new End(start_form, this);
-                        end_form.Show();
-                        this.Close();
-                    }
-                }
-                else
-                {
-                    System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();    // Створюємо таймер(для того, щоб можна було запам'ятати кнопки)
-                    timer.Interval = 1000;
-                    timer.Tick += Timer_Tick;
-                    timer.Start();
+                    activity_form = false;
+                    End end_form = new End(start_form, this);
+                    end_form.Show();
+                    this.Close();
                 }
             }
-            
+            else
+            {
+                System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();    // РЎС‚РІРѕСЂСЋС”РјРѕ С‚Р°Р№РјРµСЂ(РґР»СЏ С‚РѕРіРѕ, С‰РѕР± РјРѕР¶РЅР° Р±СѓР»Рѕ Р·Р°РїР°Рј'СЏС‚Р°С‚Рё РєРЅРѕРїРєРё)
+                timer.Interval = 1000;
+                timer.Tick += Timer_Tick;
+                timer.Start();
+            }
+
         }
 
-        private void Timer_Tick(object sender, EventArgs e) // Таймер закінчиться, спрацює функція, де ми повертаємо все назад
+        private void Timer_Tick(object sender, EventArgs e) // РўР°Р№РјРµСЂ Р·Р°РєС–РЅС‡РёС‚СЊСЃСЏ, СЃРїСЂР°С†СЋС” С„СѓРЅРєС†С–СЏ, РґРµ РјРё РїРѕРІРµСЂС‚Р°С”РјРѕ РІСЃРµ РЅР°Р·Р°Рґ
         {
-            btn1.Text = "";
+            btn1.Tag = "";
             btn1.BackColor = Color.White;
-            btn2.Text = "";
+            btn1.Image = null;
+            btn2.Tag = "";
             btn2.BackColor = Color.White;
+            btn2.Image = null;
             btn1 = null;
             btn2 = null;
             ((System.Windows.Forms.Timer)sender).Stop();
@@ -413,11 +434,11 @@ namespace WinFormsApp2
             Click(two_arr[7, 7], sender);
         }
 
-        private void Game_FormClosing(object sender, FormClosingEventArgs e)    // Функція при закриття форми 
+        private void Game_FormClosing(object sender, FormClosingEventArgs e)    // Р¤СѓРЅРєС†С–СЏ РїСЂРё Р·Р°РєСЂРёС‚С‚СЏ С„РѕСЂРјРё 
         {
             if (activity_form)
             {
-                start_form.Close(); // Закриває стартову форми(це потрібно для того, щоб потім не був зайвий процес в Windows, якщо не закрити, полетят помилки)
+                start_form.Close(); // Р—Р°РєСЂРёРІР°С” СЃС‚Р°СЂС‚РѕРІСѓ С„РѕСЂРјРё(С†Рµ РїРѕС‚СЂС–Р±РЅРѕ РґР»СЏ С‚РѕРіРѕ, С‰РѕР± РїРѕС‚С–Рј РЅРµ Р±СѓРІ Р·Р°Р№РІРёР№ РїСЂРѕС†РµСЃ РІ Windows, СЏРєС‰Рѕ РЅРµ Р·Р°РєСЂРёС‚Рё, РїРѕР»РµС‚СЏС‚ РїРѕРјРёР»РєРё)
             }
         }
     }
