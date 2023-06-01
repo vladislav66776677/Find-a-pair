@@ -1,4 +1,4 @@
-﻿namespace WinFormsApp2
+﻿namespace Find_a_pair
 {
     partial class End
     {
