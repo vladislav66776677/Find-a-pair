@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,17 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WinFormsApp2
+namespace Find_a_pair
 {
     public partial class Start : Form
     {
-        public Start()  
+        public Start()
         {
-            this.FormBorderStyle = FormBorderStyle.FixedSingle; // Фіксуємо розміри форми, щоб не можна було змінювати розміри форми під час працювання форми
-            InitializeComponent();  
+            InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)  
+        private void button1_Click(object sender, EventArgs e)
         {
             Game form = new Game(this);   // Створення форми основної гри, де ми в параметр конструктора Game передаємо посилання на форму Start(на самого себе)
             form.Show();    // Показуємо форму гри
